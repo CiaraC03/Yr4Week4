@@ -46,10 +46,12 @@ public class ProductService {
     }
 
     public List<Product> deleteProduct(Long id) {
-        Product existingProduct = findProductById(id);
+        if(productRepository.existsById(id)){
+            productRepository.deleteById(id);
+        }
 
-        productList.remove(existingProduct);
-        return productList;
+
+        return null;
 
 
     }
