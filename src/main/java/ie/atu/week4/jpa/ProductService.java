@@ -21,42 +21,38 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+
+    public List<Product> getAllProducts(){
+        return productRepository.findAll();
+    }
     public List<Product> addProduct(Product product){
         productRepository.save(product);
         return productRepository.findAll();
     }
 
-    private Product findProductById(int id) {
-        for (Product product : productList) {
-            if (product.getProductCode() == id) {
-                return product;
-            }
-        }
-        return null;
+    private Product findProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find product."));
     }
 
-    public Product updateProduct(int id, Product updatedProduct){
+    public Product updateProduct(Long id, Product updatedProduct){
         Product existingProduct = findProductById(id);
 
-        if (existingProduct != null) {
             existingProduct.setProductName(updatedProduct.getProductName());
             existingProduct.setProductDescription(updatedProduct.getProductDescription());
             existingProduct.setProductPrice(updatedProduct.getProductPrice());
-            return existingProduct;
-        } else {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
+            return productRepository.save(existingProduct);
+
     }
 
-    public List<Product> deleteProduct(int id) {
-        Product existingProduct = findProductById(id);
-
-        if (existingProduct != null) {
-            productList.remove(existingProduct);
-            return productList;
-        } else {
-            return null;
+    public List<Product> deleteProduct(Long id) {
+        if(productRepository.existsById(id)){
+            productRepository.deleteById(id);
         }
+
+
+        return null;
+
 
     }
 }

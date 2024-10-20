@@ -15,8 +15,8 @@ public class ProductController {
         this.productService = productService;
     }
     @GetMapping("/getProducts")
-    public List<Product> getProducts() {
-        return productList;
+    public ResponseEntity<List<Product>> getProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @PostMapping("/addProduct")
@@ -27,13 +27,14 @@ public class ProductController {
 
 
     @PutMapping("/updateProduct/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product updatedProduct) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
         Product update = productService.updateProduct(id, updatedProduct);
         return ResponseEntity.ok(update);
     }
 
+
     @DeleteMapping("/deleteProduct/{id}")
-    public ResponseEntity<List<Product>> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<List<Product>> deleteProduct(@PathVariable Long id) {
        List<Product> productList = productService.deleteProduct(id);
        return ResponseEntity.ok(productList);
     }
